@@ -13,7 +13,7 @@ namespace TheWorld.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("TheWorld.Models.Stop", b =>
@@ -22,6 +22,8 @@ namespace TheWorld.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Arrival");
+
+                    b.Property<string>("Comment");
 
                     b.Property<double>("Latitude");
 
@@ -59,7 +61,7 @@ namespace TheWorld.Migrations
             modelBuilder.Entity("TheWorld.Models.Stop", b =>
                 {
                     b.HasOne("TheWorld.Models.Trip")
-                        .WithMany()
+                        .WithMany("Stops")
                         .HasForeignKey("TripId");
                 });
         }
