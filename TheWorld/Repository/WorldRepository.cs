@@ -38,10 +38,22 @@ namespace TheWorld.Repository
             _context.Trips.Add(trip);
         }
 
-        public void AddStopsToTrip(Trip trip, ICollection<Stop> stops)
+
+        public void AddStopsToTrip(string tripName, ICollection<Stop> stops)
         {
             _logger.LogInformation("Add Stops to the Context");
             _context.Stops.AddRange(stops);
+        }
+
+        public void AddStopToTrip(string tripName, Stop stop)
+        {
+            _logger.LogInformation("Add Stops to the Context");
+            var trip = GetTrip(tripName);
+            if (trip != null)
+            {
+                trip.Stops.Add(stop);
+                _context.Stops.Add(stop);
+            }
         }
 
         public async Task<int> SaveContext()
@@ -49,6 +61,8 @@ namespace TheWorld.Repository
             _logger.LogInformation("Save context to BBDD");
             return await _context.SaveChangesAsync();
         }
-   
+
+
+
     }
 }

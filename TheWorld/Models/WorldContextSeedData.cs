@@ -104,10 +104,10 @@ namespace TheWorld.Models
         };
 
         _repository.AddTrip(usTrip);
-        _repository.AddStopsToTrip(usTrip, usTrip.Stops);
+        _repository.AddStopsToTrip(usTrip.Name, usTrip.Stops);
         
         _repository.AddTrip(worldTrip);
-        _repository.AddStopsToTrip(worldTrip, worldTrip.Stops);
+        _repository.AddStopsToTrip(worldTrip.Name, worldTrip.Stops);
 
         await _repository.SaveContext();
 

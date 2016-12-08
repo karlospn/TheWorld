@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using TheWorld.Models;
 using TheWorld.Repository;
 using TheWorld.ViewModels;
 
@@ -34,6 +35,30 @@ namespace TheWorld.Controllers.API
             catch (Exception ex)
             {
                 return BadRequest("Error Retrieving Trip");
+            }
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Post(string tripName, [FromBody] StopViewModel stopViewModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var stopEntity = Mapper.Map<Stop>(stopViewModel);
+                    _repository.AddStopToTrip(tripName, stopEntity);
+                    if (await _repository.SaveContext() > 0)
+                    {
+                        return Created($"/api/trips/{stopViewModel.Name}/stops", Mapper.Map<StopViewModel>(stopEntity));
+                    }
+                    return BadRequest("Failed to save changes to BBDD");
+                }
+                return BadRequest(ModelState);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error Saving Stop to Trip");       
             }
         }
     }

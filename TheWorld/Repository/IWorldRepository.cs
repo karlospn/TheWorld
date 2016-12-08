@@ -9,7 +9,8 @@ namespace TheWorld.Repository
         IEnumerable<Trip> GetAllTrips();
         Trip GetTrip(string tripName);
         void AddTrip(Trip trip);
-        void AddStopsToTrip(Trip trip, ICollection<Stop> stops);
+        void AddStopsToTrip(string tripName, ICollection<Stop> stops);
+        void AddStopToTrip(string tripName,Stop stop);
 
         Task<int> SaveContext();
     }
