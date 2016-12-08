@@ -36,15 +36,19 @@ namespace TheWorld.Controllers.API
         }
 
         [HttpPost("")]
-        public IActionResult Post([FromBody] TripViewModel tripViewModel)
+        public async Task<IActionResult> Post([FromBody] TripViewModel tripViewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var tripEntity = Mapper.Map<Trip>(tripViewModel);
-                    var tripVm = Mapper.Map<TripViewModel>(tripEntity);
-                    return Created($"/api/trips/{tripViewModel.Name}", tripVm);
+                    _repository.AddTrip(tripEntity);
+                    if (await _repository.SaveContext() > 0)
+                    {
+                        return Created($"/api/trips/{tripViewModel.Name}", Mapper.Map<TripViewModel>(tripEntity));
+                    }
+                    return BadRequest("Failed to save changes to BBDD");
                 }
                 return BadRequest(ModelState);
             }

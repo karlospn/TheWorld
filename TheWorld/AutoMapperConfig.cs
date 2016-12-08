@@ -15,6 +15,7 @@ namespace TheWorld
             AutoMapper.Mapper.Initialize(a =>
             {
                 a.AddProfile<TripViewModelProfile>();
+                a.AddProfile<StopViewModelProfile>();
             });
 
         }
@@ -27,6 +28,15 @@ namespace TheWorld
             base.CreateMap<TripViewModel, Trip>()
                 .ForMember(dest => dest.DateCreated,
                     opts => opts.MapFrom(src => src.Created)).ReverseMap();
+        }
+
+    }
+
+    internal class StopViewModelProfile : Profile
+    {
+        public StopViewModelProfile()
+        {
+            base.CreateMap<Stop, StopViewModel>().ReverseMap();
         }
 
     }
