@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheWorld.Repository;
 
 namespace TheWorld.Models
 {
   public class WorldContextSeedData
   {
-    private WorldContext _context;
+      private readonly IWorldRepository _repository;
 
-    public WorldContextSeedData(WorldContext context)
+    public WorldContextSeedData(IWorldRepository repository)
     {
-      _context = context;
+        _repository = repository;
     }
 
     public async Task EnsureSeedData()
     {
-      if (!_context.Trips.Any())
+        var trips = _repository.GetAllTrips();
+      if (!trips.Any())
       {
         var usTrip = new Trip()
         {
@@ -34,10 +36,6 @@ namespace TheWorld.Models
             new Stop() {  Name = "Atlanta, GA", Arrival = new DateTime(2014, 8, 23), Latitude = 33.748995, Longitude = -84.387982, Order = 5 },
           }
         };
-
-        _context.Trips.Add(usTrip);
-
-        _context.Stops.AddRange(usTrip.Stops);
 
         var worldTrip = new Trip()
         {
@@ -105,11 +103,9 @@ namespace TheWorld.Models
           }
         };
 
-        _context.Trips.Add(worldTrip);
-
-        _context.Stops.AddRange(worldTrip.Stops);
-
-        await _context.SaveChangesAsync();
+        _repository.AddTripToDbContext(usTrip);
+        _repository.AddTripToDbContext(worldTrip);
+        await _repository.SaveContext();
 
       }
     } 
