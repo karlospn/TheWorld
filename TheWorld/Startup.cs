@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using TheWorld.Models;
 using TheWorld.Repository;
 using TheWorld.Services;
+using TheWorld.ViewModels;
 
 namespace TheWorld
 {
@@ -53,7 +56,7 @@ namespace TheWorld
 
       services.AddLogging();
 
-      services.AddMvc();
+      services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,29 +65,30 @@ namespace TheWorld
       WorldContextSeedData seeder,
       ILoggerFactory factory)
     {
+        AutoMapperConfig.RegisterMappings();      
 
-      if (env.IsEnvironment("Development"))
-      {
-        app.UseDeveloperExceptionPage();
-        factory.AddDebug(LogLevel.Information);
-      }
-      else
-      {
-        factory.AddDebug(LogLevel.Error);
-      }
+        if (env.IsEnvironment("Development"))
+        {
+            app.UseDeveloperExceptionPage();
+            factory.AddDebug(LogLevel.Information);
+        }
+        else
+        {
+            factory.AddDebug(LogLevel.Error);
+        }
 
-      app.UseStaticFiles();
+        app.UseStaticFiles();
 
-      app.UseMvc(config =>
-      {
-        config.MapRoute(
-          name: "Default",
-          template: "{controller}/{action}/{id?}",
-          defaults: new { controller = "App", action = "Index" }
-          );
-      });
+        app.UseMvc(config =>
+        {
+            config.MapRoute(
+                name: "Default",
+                template: "{controller}/{action}/{id?}",
+                defaults: new { controller = "App", action = "Index" }
+                );
+        });
 
-      seeder.EnsureSeedData().Wait();
+        seeder.EnsureSeedData().Wait();
     }
   }
 }
