@@ -53,21 +53,25 @@ namespace TheWorld.Controllers.Web
     [HttpPost]
     public IActionResult Contact(ContactViewModel model)
     {
-      if (model.Email.Contains("aol.com"))
-      {
-        ModelState.AddModelError("", "We don't support AOL addresses");
-      }
+        if (model.Email == null || model.Message == null || model.Name == null)
+        {
+            ModelState.AddModelError("", "There are some empty fields on the form");
+        }
+        if (model.Email.Contains("aol.com"))
+        {
+            ModelState.AddModelError("", "We don't support AOL addresses");
+        }
 
-      if (ModelState.IsValid)
-      {
-        _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, "From TheWorld", model.Message);
+        if (ModelState.IsValid)
+        {
+            _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, "From TheWorld", model.Message);
 
-        ModelState.Clear();
+            ModelState.Clear();
 
-        ViewBag.UserMessage = "Message Sent";
-      }
+            ViewBag.UserMessage = "Message Sent";
+        }
 
-      return View();
+        return View();
     }
 
     public IActionResult About()
