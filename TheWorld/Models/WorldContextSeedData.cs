@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using TheWorld.Repository;
 
 namespace TheWorld.Models
@@ -10,22 +11,37 @@ namespace TheWorld.Models
   public class WorldContextSeedData
   {
       private readonly IWorldRepository _repository;
+      private readonly UserManager<WorldUser> _userManager;
 
-    public WorldContextSeedData(IWorldRepository repository)
-    {
-        _repository = repository;
-    }
+
+      public WorldContextSeedData(IWorldRepository repository, UserManager<WorldUser> userManager )
+      {
+          _repository = repository;
+          _userManager = userManager;
+      }
 
     public async Task EnsureSeedData()
     {
-        var trips = _repository.GetAllTrips();
+
+        if (await _userManager.FindByEmailAsync("carlospons@mailinator.com") == null)
+        {
+            await _userManager.CreateAsync(new WorldUser
+            {
+                Email = "carlospons@mailinator.com",
+                UserName = "carlospons",
+
+
+            }, "P@ssw0rd");
+        }
+
+      var trips = _repository.GetAllTrips();
       if (!trips.Any())
       {
         var usTrip = new Trip()
         {
           DateCreated = DateTime.UtcNow,
           Name = "US Trip",
-          UserName = "", // TODO Add UserName
+          UserName = "carlospons", // TODO Add UserName
           Stops = new List<Stop>()
           {
             new Stop() {  Name = "Atlanta, GA", Arrival = new DateTime(2014, 6, 4), Latitude = 33.748995, Longitude = -84.387982, Order = 0 },
@@ -41,7 +57,7 @@ namespace TheWorld.Models
         {
           DateCreated = DateTime.UtcNow,
           Name = "WorldTrip",
-          UserName = "", // TODO Add UserName
+          UserName = "carlospons", // TODO Add UserName
           Stops = new List<Stop>()
           {
             new Stop() { Order = 0, Latitude =  33.748995, Longitude =  -84.387982, Name = "Atlanta, Georgia", Arrival = DateTime.Parse("Jun 3, 2014") },
