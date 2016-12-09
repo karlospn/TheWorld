@@ -7,6 +7,6 @@ Using:
 - Bootswatch
 - MVC6
 - ASP.NET Identity
-- Angular JS + Bootstrap + MVC6 pluralsight test project
+- Angular JS
 - Bower
 - GIT
