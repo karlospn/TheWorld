@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,21 @@ namespace TheWorld
                 config.User.RequireUniqueEmail = true;
                 config.Password.RequiredLength = 5;
                 config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+                config.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = async x =>
+                    {
+                        if (x.Request.Path.StartsWithSegments("/api") && x.Response.StatusCode == 200)
+                        {
+                            x.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            x.Response.Redirect(x.RedirectUri);
+                        }
+                        await Task.Yield();
+                    }                  
+                };
             }).AddEntityFrameworkStores<WorldContext>();
             services.AddDbContext<WorldContext>();
             services.AddLogging();

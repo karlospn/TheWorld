@@ -25,11 +25,22 @@ namespace TheWorld.Repository
           return _context.Trips.ToList();
         }
 
+        public IEnumerable<Trip> GetTripsByUsername(string user)
+        {
+            return _context.Trips.Where(x => x.UserName == user);
+        }
+
         public Trip GetTrip(string tripName)
         {
             _logger.LogInformation("Getting All Trips from the Context");
             return _context.Trips
                 .Include(x => x.Stops).FirstOrDefault(x => x.Name == tripName);
+        }
+
+        public Trip GetUserTrip(string tripName, string user)
+        {
+            return _context.Trips
+               .Include(x => x.Stops).FirstOrDefault(x => x.Name == tripName && x.UserName == user);
         }
 
         public void AddTrip(Trip trip)
@@ -49,6 +60,16 @@ namespace TheWorld.Repository
         {
             _logger.LogInformation("Add Stops to the Context");
             var trip = GetTrip(tripName);
+            if (trip != null)
+            {
+                trip.Stops.Add(stop);
+                _context.Stops.Add(stop);
+            }
+        }
+
+        public void AddStopToUserTrip(string tripName, Stop stop, string identityName)
+        {
+            var trip = GetUserTrip(tripName, identityName);
             if (trip != null)
             {
                 trip.Stops.Add(stop);
