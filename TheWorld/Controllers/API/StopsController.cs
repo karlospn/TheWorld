@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TheWorld.Models;
 using TheWorld.Repository;
+using TheWorld.Services.GeoCodesService;
 using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.API
@@ -14,10 +15,12 @@ namespace TheWorld.Controllers.API
     public class StopsController : Controller
     {
         private readonly IWorldRepository _repository;
+        private readonly IGeoCoordsService _geoCoordsService;
 
-        public StopsController(IWorldRepository repository)
+        public StopsController(IWorldRepository repository, IGeoCoordsService geoCoordsService)
         {
             _repository = repository;
+            _geoCoordsService = geoCoordsService;
         }
 
         [HttpGet("")]
@@ -46,12 +49,23 @@ namespace TheWorld.Controllers.API
                 if (ModelState.IsValid)
                 {
                     var stopEntity = Mapper.Map<Stop>(stopViewModel);
-                    _repository.AddStopToTrip(tripName, stopEntity);
-                    if (await _repository.SaveContext() > 0)
+
+                    var geoCoords = await _geoCoordsService.GetCoordsAsync(stopEntity.Name);
+                    if (geoCoords.Success)
                     {
-                        return Created($"/api/trips/{stopViewModel.Name}/stops", Mapper.Map<StopViewModel>(stopEntity));
+                        stopEntity.Latitude = geoCoords.Latitude;
+                        stopEntity.Longitude = geoCoords.Longitude;
+
+
+                        _repository.AddStopToTrip(tripName, stopEntity);
+                        if (await _repository.SaveContext() > 0)
+                        {
+                            return Created($"/api/trips/{stopViewModel.Name}/stops",
+                                Mapper.Map<StopViewModel>(stopEntity));
+                        }
+                        return BadRequest("Failed to save changes to BBDD");
                     }
-                    return BadRequest("Failed to save changes to BBDD");
+                    return BadRequest(geoCoords.Message);
                 }
                 return BadRequest(ModelState);
 

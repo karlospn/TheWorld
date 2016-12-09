@@ -13,6 +13,7 @@ using Newtonsoft.Json.Serialization;
 using TheWorld.Models;
 using TheWorld.Repository;
 using TheWorld.Services;
+using TheWorld.Services.GeoCodesService;
 using TheWorld.ViewModels;
 
 namespace TheWorld
@@ -57,6 +58,8 @@ namespace TheWorld
       services.AddLogging();
 
       services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
+        services.AddTransient<IGeoCoordsService, GeoCoordsService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
