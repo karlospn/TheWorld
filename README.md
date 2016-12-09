@@ -1,5 +1,5 @@
 # TheWorld Web and API Application
-Example app following pluralsight course
+Example app following pluralsight course.
 Using:
 - ASP.NET Core 
 - EF Core
