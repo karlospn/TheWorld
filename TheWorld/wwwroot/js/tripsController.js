@@ -4,7 +4,7 @@
 (function () {
 
 
-    angular.module("app-trips", ["simpleControls"]).controller("tripsController", tripsController);
+    angular.module("app-trips").controller("tripsController", tripsController);
 
     function tripsController($http) {
         var vm = this;

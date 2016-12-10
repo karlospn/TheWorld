@@ -1,6 +1,6 @@
 {
-	"name": "asp.net",
-	"private": true,
+  "name": "asp.net",
+  "private": true,
   "dependencies": {
     "jquery": "~2.2.4",
     "underscore": "~1.8.3",
@@ -9,6 +9,11 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
     "bootswatch": "3.3.5+2",
-    "angular": "1.6.0"
+    "angular": "1.6.0",
+    "angular-route": "1.6.0",
+    "travelmap": "1.0.2"
+  },
+  "resolutions": {
+    "angular": "1.6.1-build.5198+sha.1ecf6ef"
   }
 }
