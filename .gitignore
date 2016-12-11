@@ -244,3 +244,4 @@ ModelManifest.xml
 #wwwroot/lib
 /TheWorld/wwwroot/lib/*
 
+/TheWorld/Properties/PublishProfiles
