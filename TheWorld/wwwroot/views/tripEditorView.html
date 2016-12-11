@@ -9,7 +9,7 @@
     <form novalidate name="newStopForm" ng-submit="vm.addStop()">
         <div class="form-group">
             <label for="arrival">Arrival Date</label>
-            <input class="form-control" id="arrival" name="arrival" required ng-model="vm.newStop.arrival" ng-pattern="/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/(19\d\d|20[12]\d)$/" />
+            <input class="form-control" id="arrival" name="arrival" required ng-model="vm.newStop.arrival" ng-pattern="/^(0?[1-9]|1[012])\/(0?[1-9]|[12][0-9]|3[01])\/(19\d\d|20[12]\d)$/" />
             <span ng-show="newStopForm.arrival.$error.required" class="text-warning">Name is required</span>
             <span ng-show="newStopForm.arrival.$error.pattern" class="text-warning">The format must be MM/dd/yyyy</span>
         </div>
