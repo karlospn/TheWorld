@@ -10,7 +10,7 @@
             scope: {
               render : "=displaywhen"  
             },
-            templateUrl : "/views/waiting.html"
+            templateUrl : "/views/waitingView.html"
         };
     }
 

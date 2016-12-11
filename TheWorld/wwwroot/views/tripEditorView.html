@@ -1,0 +1,47 @@
+﻿
+<div class="col-md-3">
+    <div class="row"><a href="#!/" class="btn btn-default">Back</a></div>
+    <h3>The World - {{vm.name}}</h3>
+    <waiting displaywhen="vm.isLoading"></waiting>
+    <div ng-show="vm.errorMessage">{{vm.errorMessage}}</div>
+    <div ng-show="vm.successMessage" class="text-success">{{vm.successMessage}}</div>
+    
+    <form novalidate name="newStopForm" ng-submit="vm.addStop()">
+        <div class="form-group">
+            <label for="arrival">Arrival Date</label>
+            <input class="form-control" id="arrival" name="arrival" required ng-model="vm.newStop.arrival" ng-pattern="/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/(19\d\d|20[12]\d)$/" />
+            <span ng-show="newStopForm.arrival.$error.required" class="text-warning">Name is required</span>
+            <span ng-show="newStopForm.arrival.$error.pattern" class="text-warning">The format must be MM/dd/yyyy</span>
+        </div>
+        <div class="form-group">
+            <label for="name">Trip Name</label>
+            <input class="form-control" type="text" id="name" name="name" ng-model="vm.newStop.name" required ng-minlength="5" />
+            <span ng-show="newStopForm.name.$error.required" class="text-warning">Name is required</span>
+            <span ng-show="newStopForm.name.$error.minlength" class="text-warning">MinLength is 5</span>
+        </div>
+        <div>
+            <input type="submit"
+                   value="Add"
+                   class="btn btn-success"
+                   ng-disabled="newStopForm.$invalid" />
+        </div>
+    </form>
+
+
+    <table class="table table-responsive table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Arrival</th>
+        </tr>
+        <tr ng-repeat="stop in vm.stops">
+            <td>{{stop.name}}</td>
+            <td>{{stop.arrival | date: 'MM-dd-yyyy' }}</td>
+        </tr>
+    </table>  
+</div>
+
+<div class="col-md-9">
+    <h2>The Map</h2>
+    <div id="map"></div>
+
+</div>
