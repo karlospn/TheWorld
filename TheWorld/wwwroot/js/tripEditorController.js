@@ -9,9 +9,13 @@
         vm.name = $routeParams.tripName;
         vm.stops = [];
         vm.errorMessage = "";
+        vm.successMessage = "";
         vm.isLoading = true;
+        vm.newStop = {};
 
-        $http.get("/api/trips/"+ vm.name +"/stops").then(
+        var url = "/api/trips/" + vm.name + "/stops";
+
+        $http.get(url).then(
            function (response) {
                $.each(response.data,
                    function (index, item) {
@@ -29,6 +33,33 @@
            }).finally(function () {
                vm.isLoading = false;
            });
+
+
+        vm.addStop = function () {
+
+            vm.isLoading = true;
+            vm.successMessage = "";
+            
+            $http.post(url, vm.newStop)
+                .then(function (response) {
+                        vm.stops.push({
+                            name: response.data.name,
+                            arrival: response.data.arrival,
+                            latitude: response.data.latitude,
+                            longitude: response.data.longitude
+
+                        });
+                        vm.successMessage = "Trip added correctly on BBDD";
+                        _showMap(vm.stops);
+                    },
+                    function () {
+                        vm.errorMessage = "Error inserting on BBDD";
+                    })
+                .finally(function () {
+                    vm.newStop = {};
+                    vm.isLoading = false;
+                });
+        }
     }
 
 
